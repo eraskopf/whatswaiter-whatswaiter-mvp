@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  agent-ai:
+    build: ../packages/agent-ai
+    ports:
+      - "8000:8000"
+  kitchen-panel:
+    build: ../packages/kitchen-panel
+    ports:
+      - "8080:80"
+  gateway:
+    build: ../packages/gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - mongo
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+volumes:
+  mongo-data:
