@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -8,9 +8,9 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 
 app.use(express.json());
 
-app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.get('/health', (_req: Request, res: Response) => res.json({ status: 'ok' }));
 
-app.post('/orders', (req, res) => {
+app.post('/orders', (req: Request, res: Response) => {
   io.emit('order:new', req.body.order || 'unknown');
   res.sendStatus(200);
 });

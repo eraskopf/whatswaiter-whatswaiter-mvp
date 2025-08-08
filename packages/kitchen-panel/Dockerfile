@@ -1,7 +1,12 @@
 FROM node:22-alpine as build
 WORKDIR /app
-COPY package.json tsconfig.json vite.config.ts index.html ./
-COPY src ./src
+
+# Copy package-specific files
+COPY packages/kitchen-panel/package.json packages/kitchen-panel/tsconfig.json packages/kitchen-panel/vite.config.ts packages/kitchen-panel/index.html ./
+# Copy shared base TypeScript config
+COPY tsconfig.json /tsconfig.json
+
+COPY packages/kitchen-panel/src ./src
 RUN npm install && npm run build
 
 FROM nginx:alpine

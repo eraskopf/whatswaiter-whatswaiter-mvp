@@ -16,11 +16,15 @@ services:
     ports:
       - "8000:8000"
   kitchen-panel:
-    build: ../packages/kitchen-panel
+    build:
+      context: ..
+      dockerfile: packages/kitchen-panel/Dockerfile
     ports:
       - "8080:80"
   gateway:
-    build: ../packages/gateway
+    build:
+      context: ..
+      dockerfile: packages/gateway/Dockerfile
     ports:
       - "3000:3000"
     depends_on:
