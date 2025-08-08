@@ -1,0 +1,65 @@
+{
+  "name": "flow-basic-table",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "mesa",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const msg = $json.body.message?.toString().trim().toLowerCase();\nlet reply;\nswitch (msg) {\n  case '/start':\n    reply = 'Bem-vindo ao WhatsWaiter! Digite \"menu\" para ver o cardápio.';\n    break;\n  case 'menu':\n    reply = '1. Pizza Margherita\\n2. Burger Artesanal\\nEnvie o número do item para pedir.';\n    break;\n  case '1':\n    reply = 'Pizza Margherita adicionada ao pedido. Digite \"pagar\" para finalizar.';\n    break;\n  case '2':\n    reply = 'Burger Artesanal adicionado ao pedido. Digite \"pagar\" para finalizar.';\n    break;\n  case 'pagar':\n    reply = 'Pagamento via PIX: https://exemplo.com/qrcode-pix';\n    break;\n  default:\n    reply = 'Desculpe, não entendi. Digite \"/start\" ou \"menu\".';\n}\nreturn { reply };"
+      },
+      "id": "2",
+      "name": "Process Message",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "responseBody": "={{$json.reply}}",
+        "responseCode": 200
+      },
+      "id": "3",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [780, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Message": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null,
+  "id": "basicTableFlow"
+}
